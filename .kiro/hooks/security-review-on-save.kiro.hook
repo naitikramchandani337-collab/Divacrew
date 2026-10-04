@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "Security Review on Save",
+  "description": "When a migration or lib file is saved, checks that new tables have RLS enabled with policies, no secrets or personal data are logged, and all inputs are validated with Zod. Reports issues as a short checklist.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "supabase/migrations/*.sql",
+      "lib/**/*.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A file was just saved in /supabase/migrations or /lib. Review the changes and check for ALL of the following. Report your findings as a short checklist — ✅ for pass, ⚠️ for issue:\n\n1. **RLS**: Does every new CREATE TABLE statement have a corresponding ALTER TABLE ... ENABLE ROW LEVEL SECURITY and at least one CREATE POLICY? List any tables missing RLS or policies.\n2. **No secrets in logs**: Does any new code log, print, or concatenate phone numbers, passwords, tokens, OTPs, user IDs, location data, check-in data, or any field from the sensitive tables (trusted_contacts, checkins, reports, consents)? Flag exact lines.\n3. **Zod validation**: Does every new server action, route handler, or mutation validate all user-supplied inputs with Zod before touching the database? List any unvalidated paths.\n4. **Soft-delete pattern**: Does any new table that stores user-generated content include a deleted_at column?\n5. **Audit logging**: Do any new routes that access sensitive tables (trusted_contacts, checkins, reports, consents, audit_logs) call the Audit_Service or equivalent audit log writer?\n\nKeep the checklist short. Only flag real issues, not style preferences."
+  }
+}

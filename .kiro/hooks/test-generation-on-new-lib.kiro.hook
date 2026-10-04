@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Test Generation on New Lib File",
+  "description": "When a new file is saved under /lib, checks whether a matching test file exists in /tests. If not, creates a Vitest test file covering the main behaviour and edge cases.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "lib/**/*.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A file was just saved under /lib. Do the following:\n\n1. Identify the saved file path.\n2. Derive the expected test file path: replace the /lib prefix with /tests, and change the filename from foo.ts to foo.test.ts (e.g. lib/crews/crew-service.ts → tests/crews/crew-service.test.ts).\n3. Check whether that test file already exists. If it does, do nothing and respond \"Test file already exists — no action needed.\"\n4. If the test file does NOT exist, create it. The test file should:\n   - Use Vitest (import { describe, it, expect, vi } from 'vitest')\n   - Cover the main exported functions or classes in the saved file\n   - Include at least one happy-path test and one edge-case or error-path test per exported function\n   - Mock Supabase calls and external dependencies using vi.mock\n   - Follow the naming and structure conventions in existing test files if any exist in /tests\n   - Add a comment at the top: \"// Auto-generated test scaffold — review and expand before shipping\""
+  }
+}

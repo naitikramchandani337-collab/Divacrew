@@ -1,0 +1,18 @@
+{
+  "enabled": true,
+  "name": "Privacy Check on New Fields",
+  "description": "When a migration or API file is saved, detects new personal data fields (phone, location, DOB, images, contacts) and asks whether each is necessary, covered by the privacy notice, and has a retention period defined.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "supabase/migrations/*.sql",
+      "app/**/*.ts",
+      "lib/**/*.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A file was just saved that may define new database columns or API fields. Review the changes and flag any new personal data fields.\n\n**Personal data includes:** phone number, location (any form), date of birth or age, biometric data, images or photos, device identifiers, IP addresses, contact lists, message content, check-in status, health or wellbeing data, financial data.\n\nFor EACH new personal data field found, answer these three questions:\n1. **Necessary?** Is this field required for a feature in the spec, or is it extra? If extra, suggest removing it.\n2. **Privacy notice coverage?** Is this type of data mentioned in the onboarding privacy notice (product.md says: consent screen, plain-language privacy notice). If not, flag it as needing a notice update.\n3. **Retention period?** Is there a deletion rule (scheduled job, TTL, soft-delete trigger) defined for this field? If not, suggest one based on the data sensitivity.\n\nAlso flag:\n- Any field that stores an exact GPS coordinate (lat/lng) — DivaCrew uses coarse area names only.\n- Any field that stores a date of birth directly — DivaCrew stores only age_bracket (minor/adult).\n- Any logging statement that writes personal data in plain text.\n\nIf no personal data fields are found in the changes, respond: \"No new personal data fields detected — no action needed.\""
+  }
+}

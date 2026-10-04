@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "Copy and Tone Check",
+  "description": "When a component or page file is saved, checks new UI text for DivaCrew tone (warm, short, playful) and flags anything that comments on bodies, labels places as safe, sounds judgmental, or violates product rules.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "app/**/*.tsx",
+      "components/**/*.tsx"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A UI file was just saved. Review any new or changed user-facing text strings (button labels, headings, body copy, toast messages, empty states, placeholders, error messages, notifications) and check for the following. Report findings as a short checklist — ✅ for pass, ⚠️ for issue:\n\n1. **Body comments**: Does any string comment on a user's body, weight, size, skin, appearance, or attractiveness? (DivaCrew rule: fashion features must NEVER comment on bodies.) Flag exact strings.\n\n2. **\"Safe\" claims**: Does any string label a place, person, event, or situation as \"safe\", \"verified safe\", \"confirmed safe\", or equivalent? (DivaCrew rule: never claim a place or person is safe.) Flag exact strings.\n\n3. **Tone**: Is the copy warm, short, and Gen-Z friendly? Flag strings that sound formal, corporate, condescending, or preachy. Suggest a rewrite in DivaCrew tone.\n\n4. **Emergency services disclaimer**: Do any SOS, check-in, or safety-related strings imply that the feature contacts emergency services automatically? If so, flag them — the required copy is: \"This does not contact emergency services. In an emergency, call 112.\"\n\n5. **Civic neutrality**: Do any strings about laws, policies, or government actions state or imply a political opinion or recommendation? (DivaCrew rule: civic content is neutral — summarise, link sources, never persuade.)\n\n6. **Verified claims**: Do any strings on community reports or Spill content imply the report has been verified or endorsed by DivaCrew? Required label is \"Community report — unverified\".\n\nIf no UI text is found in the changes, respond: \"No user-facing text detected — no action needed.\""
+  }
+}
